@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.svalero.f1wiki.RaceResultsController"
+            prefWidth="600" prefHeight="500">
+
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <!-- Title -->
+        <Label text="F1 Race Results Viewer" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+        <!-- Select Season and Round -->
+        <HBox spacing="10">
+            <Label text="Select Season:"/>
+            <ComboBox fx:id="seasonComboBox" promptText="e.g. 2022"/>
+
+            <Label text="Select Round:"/>
+            <ComboBox fx:id="roundComboBox" promptText="e.g. 5"/>
+
+            <Button text="Fetch Results" onAction="#onFetchResults"/>
+        </HBox>
+
+        <!-- Search Field -->
+        <HBox spacing="10">
+            <Label text="Search:"/>
+            <TextField fx:id="searchField" promptText="Filter driver or result..."/>
+        </HBox>
+
+        <!-- Results List -->
+        <ListView fx:id="resultsListView" prefHeight="400"/>
+    </VBox>
+</AnchorPane>
