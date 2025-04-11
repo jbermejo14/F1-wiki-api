@@ -1,6 +1,7 @@
-package com.svalero.f1wiki;
+package com.svalero.f1wiki.table;
 
 import com.google.gson.annotations.SerializedName;
+import com.svalero.f1wiki.domain.Race;
 
 import java.util.List;
 

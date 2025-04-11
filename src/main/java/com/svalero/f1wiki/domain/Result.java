@@ -1,4 +1,4 @@
-package com.svalero.f1wiki;
+package com.svalero.f1wiki.domain;
 
 import com.google.gson.annotations.SerializedName;
 
