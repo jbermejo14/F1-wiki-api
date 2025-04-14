@@ -1,12 +1,12 @@
 package com.svalero.f1wiki;
 import com.google.gson.Gson;
-import com.svalero.f1wiki.ErgastApi;
-import com.svalero.f1wiki.Race;
-import com.svalero.f1wiki.RaceResultsResponse;
-import com.svalero.f1wiki.Result;
+import com.svalero.f1wiki.domain.Race;
+import com.svalero.f1wiki.domain.Result;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,6 +48,22 @@ public class RaceResultsApp extends Application {
         fetchRaceResults(2008, 6);
     }
 
+
+    @FXML
+    private void onSearchDrivers(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("driver_detail.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Search Drivers");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void fetchRaceResults(int season, int round) {
         ErgastApi api = new Retrofit.Builder()
                 .baseUrl("https://ergast.com/api/")
@@ -85,6 +101,21 @@ public class RaceResultsApp extends Application {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
                 .subscribe(this::updateUI, Throwable::printStackTrace);
+    }
+
+    @FXML
+    private void onSearchConstructors(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("constructor_detail.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Search Constructors");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
