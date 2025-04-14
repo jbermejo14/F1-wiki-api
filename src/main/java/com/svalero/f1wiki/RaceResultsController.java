@@ -65,7 +65,7 @@ public class RaceResultsController {
     @FXML
     private void onSearchConstructors(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/constructors_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/search-constructors-view.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();

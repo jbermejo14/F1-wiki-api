@@ -17,5 +17,5 @@ public interface ErgastApi {
     Call<DriversResponse> getDrivers();
 
     @GET("f1/constructors.json")
-    Call<ConstructorsResponse> getConstructors(@Path("season") int season);
+    Call<ConstructorsResponse> getConstructors();
 }

@@ -8,17 +8,12 @@ public class ConstructorDetailController {
 
     @FXML
     private Label nameLabel;
-
     @FXML
     private Label nationalityLabel;
 
-    @FXML
-    private Label constructorIdLabel;
-
     public void setConstructor(Constructor constructor) {
-        nameLabel.setText("Name: " + constructor.getName());
+        nameLabel.setText(constructor.getName());
         nationalityLabel.setText("Nationality: " + constructor.getNationality());
-        constructorIdLabel.setText("ID: " + constructor.getConstructorId());
     }
-}
 
+}

@@ -1,8 +1,9 @@
 package com.svalero.f1wiki.table;
 
 import com.google.gson.annotations.SerializedName;
+import com.svalero.f1wiki.domain.Constructor;
 
-import java.lang.reflect.Constructor;
+
 import java.util.List;
 
 public class ConstructorTable {
