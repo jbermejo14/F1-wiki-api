@@ -1,14 +1,22 @@
-package com.svalero.f1wiki;
+package com.svalero.f1wiki.controllers;
 
+import com.google.gson.Gson;
+import com.svalero.f1wiki.ErgastApi;
+
+import com.svalero.f1wiki.domain.Driver;
+import com.svalero.f1wiki.response.DriversResponse;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +41,7 @@ public class SearchDriversController {
     @FXML
     public void initialize() {
         // Fetch drivers for a season, example: 2021
-        fetchDrivers(2021);
+        fetchDrivers();
 
         searchField.textProperty().addListener((obs, oldVal, newVal) -> filterDrivers(newVal));
 
@@ -52,31 +60,52 @@ public class SearchDriversController {
     }
 
     // Fetch drivers from the API
-    private void fetchDrivers(int season) {
-        Retrofit retrofit = new Retrofit.Builder()
+    private void fetchDrivers() {
+        ErgastApi api = new Retrofit.Builder()
                 .baseUrl("https://ergast.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
+                .create(ErgastApi.class);
 
-        ErgastApi api = retrofit.create(ErgastApi.class);
-        Call<DriversResponse> call = api.getDrivers(season);
-
-        call.enqueue(new Callback<DriversResponse>() {
-            @Override
-            public void onResponse(Call<DriversResponse> call, Response<DriversResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    allDrivers = response.body().getMRData().getDriverTable().getDrivers();
-                    displayedDrivers.setAll(allDrivers.stream().map(Driver::getFullName).collect(Collectors.toList()));
-                    driversListView.setItems(displayedDrivers);
+        Observable<DriversResponse> observable = Observable.create(emitter -> {
+            Call<DriversResponse> call = api.getDrivers();
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<DriversResponse> call, Response<DriversResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        emitter.onNext(response.body());
+                        emitter.onComplete();
+                    } else {
+                        emitter.onError(new Exception("API response was unsuccessful"));
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<DriversResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
+                @Override
+                public void onFailure(Call<DriversResponse> call, Throwable t) {
+                    emitter.onError(t);
+                }
+            });
         });
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(
+                        response -> Platform.runLater(() -> {
+                            allDrivers = response.getMRData().getDriverTable().getDrivers();
+                            if (allDrivers != null && !allDrivers.isEmpty()) {
+                                displayedDrivers.setAll(allDrivers.stream()
+                                        .map(Driver::getFullName)
+                                        .collect(Collectors.toList()));
+                                driversListView.setItems(displayedDrivers);
+                            } else {
+                                System.out.println("No drivers found in the response.");
+                            }
+                        }),
+                        Throwable::printStackTrace
+                );
     }
+
+
 
     // Filter drivers based on the search query
     private void filterDrivers(String query) {
@@ -92,13 +121,12 @@ public class SearchDriversController {
         }
     }
 
-    // Open the driver detail view
     private void openDriverDetail(Driver driver) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/svalero/f1wiki/detail-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/driver_detail.fxml"));
             Parent root = loader.load();
 
-            DetailViewController controller = loader.getController();
+            DriverDetailController controller = loader.getController();
             controller.setDriver(driver);
 
             Stage stage = new Stage();
@@ -109,4 +137,5 @@ public class SearchDriversController {
             e.printStackTrace();
         }
     }
+
 }

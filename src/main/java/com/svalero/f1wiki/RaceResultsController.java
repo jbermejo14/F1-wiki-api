@@ -20,6 +20,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class RaceResultsController {
     @FXML
     private void onSearchConstructors(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("constructors_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/constructors_detail.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -79,14 +80,15 @@ public class RaceResultsController {
     @FXML
     private void onSearchDrivers(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("driver_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/search-drivers-view.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
             stage.setTitle("Search Drivers");
             stage.setScene(new Scene(root));
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.err.println("Error loading FXML file: " + e.getMessage());
             e.printStackTrace();
         }
     }
