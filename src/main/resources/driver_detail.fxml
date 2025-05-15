@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.svalero.f1wiki.controllers.DriverDetailController"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+
+    <Label text="Driver Details" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <Label fx:id="nameLabel" text="Full Name" />
+    <Label fx:id="dobLabel" text="Date of Birth" />
+    <Label fx:id="nationalityLabel" text="Nationality" />
+    <Label fx:id="numberLabel" text="Number" />
+    <Label fx:id="codeLabel" text="Code" />
+
+</VBox>
