@@ -40,7 +40,6 @@ public class SearchConstructorController {
 
     @FXML
     public void initialize() {
-        // Fetch drivers for a season, example: 2021
         fetchConstructors();
 
         searchField.textProperty().addListener((obs, oldVal, newVal) -> filterConstructors(newVal));
@@ -105,9 +104,6 @@ public class SearchConstructorController {
                 );
     }
 
-
-
-    // Filter drivers based on the search query
     private void filterConstructors(String query) {
         if (query == null || query.isBlank()) {
             displayedConstructors.setAll(allConstructors.stream().map(Constructor::getName).collect(Collectors.toList()));

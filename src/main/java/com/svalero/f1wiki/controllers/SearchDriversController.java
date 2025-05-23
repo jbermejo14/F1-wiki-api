@@ -66,7 +66,7 @@ public class SearchDriversController {
                 .create(ErgastApi.class);
 
         Observable<DriversResponse> observable = Observable.create(emitter -> {
-            Call<DriversResponse> call = api.getDrivers();
+            Call<DriversResponse> call = api.getDrivers(1000, 0);
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<DriversResponse> call, Response<DriversResponse> response) {
@@ -104,8 +104,6 @@ public class SearchDriversController {
     }
 
 
-
-    // Filter drivers based on the search query
     private void filterDrivers(String query) {
         if (query == null || query.isBlank()) {
             displayedDrivers.setAll(allDrivers.stream().map(Driver::getFullName).collect(Collectors.toList()));
