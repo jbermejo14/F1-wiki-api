@@ -66,7 +66,7 @@ public class SearchDriversController {
                 .create(ErgastApi.class);
 
         Observable<DriversResponse> observable = Observable.create(emitter -> {
-            Call<DriversResponse> call = api.getDrivers(1000, 0);
+            Call<DriversResponse> call = api.getDrivers(1000);
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<DriversResponse> call, Response<DriversResponse> response) {

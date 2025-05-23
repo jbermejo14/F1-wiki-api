@@ -13,7 +13,7 @@ public interface ErgastApi {
     Call<RaceResultsResponse> getRaceResults(@Path("season") int season, @Path("round") int round);
 
     @GET("f1/drivers.json")
-    Call<DriversResponse> getDrivers(@Query("limit") int limit, @Query("offset") int offset);
+    Call<DriversResponse> getDrivers(@Query("limit") int limit);
 
     @GET("f1/constructors.json")
     Call<ConstructorsResponse> getConstructors();
