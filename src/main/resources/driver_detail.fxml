@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.svalero.f1wiki.controllers.DriverDetailController"
@@ -15,5 +16,6 @@
     <Label fx:id="nationalityLabel" text="Nationality" />
     <Label fx:id="numberLabel" text="Number" />
     <Label fx:id="codeLabel" text="Code" />
+    <ImageView fx:id="headshotImage" fitHeight="200" fitWidth="200" preserveRatio="true"/>
 
 </VBox>

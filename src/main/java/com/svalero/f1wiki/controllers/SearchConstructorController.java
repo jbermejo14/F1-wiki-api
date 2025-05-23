@@ -1,10 +1,10 @@
 package com.svalero.f1wiki.controllers;
 
-import com.google.gson.Gson;
 import com.svalero.f1wiki.ErgastApi;
+import com.svalero.f1wiki.domain.Constructor;
 
-import com.svalero.f1wiki.domain.Driver;
-import com.svalero.f1wiki.response.DriversResponse;
+import com.svalero.f1wiki.response.ConstructorsResponse;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
@@ -27,49 +27,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SearchDriversController {
+public class SearchConstructorController {
 
     @FXML
     private TextField searchField;
 
     @FXML
-    private ListView<String> driversListView;
+    private ListView<String> constructorsListView;
 
-    private List<Driver> allDrivers = new ArrayList<>();
-    private ObservableList<String> displayedDrivers = FXCollections.observableArrayList();
+    private List<Constructor> allConstructors = new ArrayList<>();
+    private ObservableList<String> displayedConstructors = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        fetchDrivers();
+        fetchConstructors();
 
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterDrivers(newVal));
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterConstructors(newVal));
 
-        driversListView.setOnMouseClicked(event -> {
-            String selectedName = driversListView.getSelectionModel().getSelectedItem();
+        constructorsListView.setOnMouseClicked(event -> {
+            String selectedName = constructorsListView.getSelectionModel().getSelectedItem();
             if (selectedName != null) {
-                Driver selected = allDrivers.stream()
-                        .filter(d -> d.getFullName().equals(selectedName))
+                Constructor selected = allConstructors.stream()
+                        .filter(d -> d.getName().equals(selectedName))
                         .findFirst()
                         .orElse(null);
                 if (selected != null) {
-                    openDriverDetail(selected);
+                    openConstructorDetail(selected);
                 }
             }
         });
     }
 
-    private void fetchDrivers() {
+    // Fetch drivers from the API
+    private void fetchConstructors() {
         ErgastApi api = new Retrofit.Builder()
                 .baseUrl("https://ergast.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ErgastApi.class);
 
-        Observable<DriversResponse> observable = Observable.create(emitter -> {
-            Call<DriversResponse> call = api.getDrivers(1000);
+        Observable<ConstructorsResponse> observable = Observable.create(emitter -> {
+            Call<ConstructorsResponse> call = api.getConstructors();
             call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<DriversResponse> call, Response<DriversResponse> response) {
+                public void onResponse(Call<ConstructorsResponse> call, Response<ConstructorsResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         emitter.onNext(response.body());
                         emitter.onComplete();
@@ -79,7 +80,7 @@ public class SearchDriversController {
                 }
 
                 @Override
-                public void onFailure(Call<DriversResponse> call, Throwable t) {
+                public void onFailure(Call<ConstructorsResponse> call, Throwable t) {
                     emitter.onError(t);
                 }
             });
@@ -89,44 +90,43 @@ public class SearchDriversController {
                 .observeOn(Schedulers.io())
                 .subscribe(
                         response -> Platform.runLater(() -> {
-                            allDrivers = response.getMRData().getDriverTable().getDrivers();
-                            if (allDrivers != null && !allDrivers.isEmpty()) {
-                                displayedDrivers.setAll(allDrivers.stream()
-                                        .map(Driver::getFullName)
+                            allConstructors = response.getMRData().getConstructorTable().getConstructors();
+                            if (allConstructors != null && !allConstructors.isEmpty()) {
+                                displayedConstructors.setAll(allConstructors.stream()
+                                        .map(Constructor::getName)
                                         .collect(Collectors.toList()));
-                                driversListView.setItems(displayedDrivers);
+                                constructorsListView.setItems(displayedConstructors);
                             } else {
-                                System.out.println("No drivers found in the response.");
+                                System.out.println("No constructors found in the response.");
                             }
                         }),
                         Throwable::printStackTrace
                 );
     }
 
-
-    private void filterDrivers(String query) {
+    private void filterConstructors(String query) {
         if (query == null || query.isBlank()) {
-            displayedDrivers.setAll(allDrivers.stream().map(Driver::getFullName).collect(Collectors.toList()));
+            displayedConstructors.setAll(allConstructors.stream().map(Constructor::getName).collect(Collectors.toList()));
         } else {
-            displayedDrivers.setAll(
-                    allDrivers.stream()
-                            .filter(driver -> driver.getFullName().toLowerCase().contains(query.toLowerCase()))
-                            .map(Driver::getFullName)
+            displayedConstructors.setAll(
+                    allConstructors.stream()
+                            .filter(constructors -> constructors.getName().toLowerCase().contains(query.toLowerCase()))
+                            .map(Constructor::getName)
                             .collect(Collectors.toList())
             );
         }
     }
 
-    private void openDriverDetail(Driver driver) {
+    private void openConstructorDetail(Constructor constructor) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/driver_detail.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/constructor_detail.fxml"));
             Parent root = loader.load();
 
-            DriverDetailController controller = loader.getController();
-            controller.setDriver(driver);
+            ConstructorDetailController controller = loader.getController();
+            controller.setConstructor(constructor);
 
             Stage stage = new Stage();
-            stage.setTitle("Driver Details");
+            stage.setTitle("Constructor Details");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
@@ -135,3 +135,5 @@ public class SearchDriversController {
     }
 
 }
+
+
