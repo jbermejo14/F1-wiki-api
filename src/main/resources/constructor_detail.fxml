@@ -5,14 +5,13 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.svalero.f1wiki.ConstructorDetailController"
+      fx:controller="com.svalero.f1wiki.controllers.ConstructorDetailController"
       spacing="10" alignment="CENTER" style="-fx-padding: 20;">
 
     <Label text="Constructor Details" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
     <Label fx:id="nameLabel" text="Name" />
     <Label fx:id="nationalityLabel" text="Nationality" />
-    <Label fx:id="constructorIdLabel" text="Constructor ID" />
 
 </VBox>
 
